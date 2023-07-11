@@ -1,5 +1,6 @@
 package com.wei.springbootmall2.Dao.Impl;
 
+import com.wei.springbootmall2.Constant.ProductCategory;
 import com.wei.springbootmall2.Dao.ProductDao;
 import com.wei.springbootmall2.RowMapper.ProductRowMapper;
 import com.wei.springbootmall2.dto.ProductRequest;
@@ -18,12 +19,22 @@ public class ProductDaoImpl implements ProductDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Product> getProducts(){
+    public List<Product> getProducts(ProductCategory category,String search){
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, description," +
                 " created_date, last_modified_date " +
-                "FROM product";
-
+                "FROM product WHERE 1=1";
+            //上面WHERE 1=1 不會影響查詢結果 只是為了銜接下面IF 判斷式後面的SQL"
         Map<String,Object> map = new HashMap<>();
+
+        if(category != null){
+            sql = sql + " AND category = :category";
+            //記得AND前面加上空白建 才能銜接上面的 WHERE 1=1 SQL
+            map.put("category", category.name());
+        } //這裡使用.name() 將 eunm類型轉換成字串 才能使用
+        if(search != null){
+            sql = sql + " AND product_name LIKE :search";
+            map.put("search", "%" + search + "%");
+        }       //% 只能加在 map裡面  Spring JDBC Template的限制
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
         return productList;

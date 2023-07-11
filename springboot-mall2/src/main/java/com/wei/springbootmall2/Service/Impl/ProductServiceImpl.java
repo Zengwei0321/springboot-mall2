@@ -1,5 +1,6 @@
 package com.wei.springbootmall2.Service.Impl;
 
+import com.wei.springbootmall2.Constant.ProductCategory;
 import com.wei.springbootmall2.Dao.ProductDao;
 import com.wei.springbootmall2.Service.ProductService;
 import com.wei.springbootmall2.dto.ProductRequest;
@@ -17,8 +18,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
 
     @Override
-    public List<Product> getProducts() {
-        return productDao.getProducts();
+    public List<Product> getProducts(ProductCategory category,String search) {
+        return productDao.getProducts(category,search);
     }
 
     @Override
