@@ -27,19 +27,25 @@ public class ProductDaoImpl implements ProductDao {
             //上面WHERE 1=1 不會影響查詢結果 只是為了銜接下面IF 判斷式後面的SQL"
         Map<String,Object> map = new HashMap<>();
 
+        //查詢條件
         if(productQueryParams.getCategory() != null){
             sql = sql + " AND category = :category";
             //記得AND前面加上空白建 才能銜接上面的 WHERE 1=1 SQL
             map.put("category", productQueryParams.getCategory().name());
         } //這裡使用.name() 將 eunm類型轉換成字串 才能使用
 
-
         if(productQueryParams.getSearch() != null){
             sql = sql + " AND product_name LIKE :search";
             map.put("search", "%" + productQueryParams.getSearch() + "%");
         }       //% 只能加在 map裡面  Spring JDBC Template的限制
 
+        //排序
         sql = sql +" ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
+
+        //分頁
+        sql = sql +" LIMIT :limit OFFSET :offset";
+        map.put("limit", productQueryParams.getLimit());
+        map.put("offset", productQueryParams.getOffset());
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
