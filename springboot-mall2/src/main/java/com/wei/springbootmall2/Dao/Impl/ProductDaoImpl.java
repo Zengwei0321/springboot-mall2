@@ -32,10 +32,15 @@ public class ProductDaoImpl implements ProductDao {
             //記得AND前面加上空白建 才能銜接上面的 WHERE 1=1 SQL
             map.put("category", productQueryParams.getCategory().name());
         } //這裡使用.name() 將 eunm類型轉換成字串 才能使用
+
+
         if(productQueryParams.getSearch() != null){
             sql = sql + " AND product_name LIKE :search";
             map.put("search", "%" + productQueryParams.getSearch() + "%");
         }       //% 只能加在 map裡面  Spring JDBC Template的限制
+
+        sql = sql +" ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
+
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
         return productList;
