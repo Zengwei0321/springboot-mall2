@@ -2,6 +2,7 @@ package com.wei.springbootmall2.Controller;
 
 import com.wei.springbootmall2.Constant.ProductCategory;
 import com.wei.springbootmall2.Service.ProductService;
+import com.wei.springbootmall2.dto.ProductQueryParams;
 import com.wei.springbootmall2.dto.ProductRequest;
 import com.wei.springbootmall2.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,12 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProducts(
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search) {
-        List<Product> productList = productService.getProducts(category,search);
 
+        ProductQueryParams productQueryParams = new ProductQueryParams();
+        productQueryParams.setCategory(category);
+        productQueryParams.setSearch(search);
+
+        List<Product> productList = productService.getProducts(productQueryParams);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
     @GetMapping("/products/{productId}")
