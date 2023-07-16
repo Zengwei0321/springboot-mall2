@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ProductService {
     //這是比較直接的用法 下面是進階的比較好整理 List<Product> getProducts(ProductCategory category,String search);
+    Integer countProduct(ProductQueryParams productQueryParams);
     List<Product> getProducts(ProductQueryParams productQueryParams);
     Product getProductById(Integer productId);
 
