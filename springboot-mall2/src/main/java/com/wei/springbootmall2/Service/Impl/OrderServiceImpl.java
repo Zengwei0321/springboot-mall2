@@ -5,6 +5,7 @@ import com.wei.springbootmall2.Dao.ProductDao;
 import com.wei.springbootmall2.Service.OrderService;
 import com.wei.springbootmall2.dto.BuyItem;
 import com.wei.springbootmall2.dto.CreateOrderRequest;
+import com.wei.springbootmall2.model.Order;
 import com.wei.springbootmall2.model.OrderItem;
 import com.wei.springbootmall2.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductDao productDao;
+
+    @Override
+    public Order getOrderById(Integer orderId) {
+        Order order = orderDao.getOrderById(orderId);
+
+        List<OrderItem> orderItemList = orderDao.getOrderItemsByOrderId(orderId);
+
+        order.setOrderItemList(orderItemList);
+
+        return order;
+    }
+
     @Transactional  //確保數據一致
     @Override
     public Integer createOrder(Integer userId, CreateOrderRequest createOrderRequest) {
